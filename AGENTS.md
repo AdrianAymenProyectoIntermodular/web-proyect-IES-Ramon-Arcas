@@ -14,11 +14,20 @@ Sitio **público** del centro (familias, alumnado, comunidad). API REST JSON baj
 - MariaDB 11.4 LTS
 - Docker: Nginx (same-origin) + PHP-FPM + MariaDB
 - OpenAPI: `openapi.yaml` (solo operaciones implementadas)
-- Frontend Vite+TS: previsto al final; no bloquea la API
+- Frontend en `web/`: React 19 + TypeScript strict + Vite + React Router, `motion` para animaciones, Vitest + Testing Library. Nginx sirve `web/dist` en `/`
+
+## Contexto del proyecto intermodular
+
+Memoria (Proyecto 2), entregas E1–E4, reparto con el compañero, fuentes de la historia: [docs/proyecto-intermodular.md](docs/proyecto-intermodular.md).
+
+- El centro está en **Lorca** (Murcia), no en Totana.
+- Personas, eventos y fichas de departamentos son **ficticios**; solo la historia del centro es real.
+- Identidad: blanco + `#ff6900`; texto sobre naranja en `#1a1a1a` y enlaces naranjas en `#b34700` (contraste WCAG AA). Logos en `web/public/brand/`.
+- Tokens en `web/src/styles/tokens.css`; reutilizar los componentes de `web/src/components/` antes de crear otros.
 
 ## Arranque rápido
 
-Ver [README.md](README.md). Resumen: copiar `.env.example` → `.env`, `docker compose up -d --build`, `composer install`, `php bin/migrate.php`, `php bin/seed.php`.
+Ver [README.md](README.md). Resumen: copiar `.env.example` → `.env`, `docker compose up -d --build`, `composer install`, `php bin/migrate.php`, `php bin/seed.php`. Frontend: `cd web && npm install && npm run dev`.
 
 ## Arquitectura
 
@@ -42,11 +51,27 @@ Documentos: [docs/arquitectura.md](docs/arquitectura.md), [docs/modelo-datos.md]
 7. Comentarios: decisiones e invariantes, no narrar lo obvio.
 8. Tests de permisos (401/403) y visibilidad pública en cada recurso sensible.
 9. Secretos solo en `.env` (nunca en el repo).
+10. **Toda implementación nueva incluye tests unitarios y se ejecutan antes de cada commit.** No se integra nada con tests en rojo.
+11. Frontend: el contraste de color, la navegación con teclado y `prefers-reduced-motion` forman parte de la implementación, no de un repaso posterior.
+
+## Tests (obligatorios)
+
+| Parte | Dónde | Ejecutar |
+|---|---|---|
+| API PHP | `api/tests/` (PHPUnit) | `docker compose exec php vendor/bin/phpunit` (o `cd api; vendor/bin/phpunit`) |
+| Frontend | `web/src/**/*.test.ts(x)` (Vitest + Testing Library) | `cd web; npm test` |
+| Calidad front | — | `npm run lint`, `npm run typecheck`, `npm run build` |
+
+Qué cubrir en cada implementación:
+- Casos normales, límites y errores (404, 422, 429, fallo de red), no solo el camino feliz.
+- API: permisos 401/403 y visibilidad pública (borradores y fuera de vigencia dan 404).
+- Front: comportamiento visible para el usuario (roles y nombres accesibles, teclado, estados de carga/vacío/error). Simular la API con `mockApi()` y renderizar rutas con `renderRoute()` (`web/src/test/utils.tsx`); nunca llamar a la API real.
+- Si se cambia el menú del seed, regenerar `api/tests/fixtures/menu-principal.json` con `php api/bin/menu-fixture.php`: lo comparan PHPUnit y Vitest.
 
 ## Flujo Git
 
 - Remoto: `https://github.com/adrirosel/web-proyect-IES-Ramon-Arcas.git`
-- **Ramas de trabajo:** `Adrian-<nombre-de-la-implementacion>` (ej. `Adrian-scaffold-admin`, `Adrian-tests-visibilidad`).
+- **Ramas de trabajo:** `<Nombre>-<nombre-de-la-implementacion>` (ej. `Adrian-scaffold-frontend`, `Adrian-tests-visibilidad`); cada integrante usa su nombre.
 - Resolver conflictos **en esa rama** antes de integrar.
 - Integrar en `main` solo cuando la implementación esté terminada y estable.
 - El commit inicial en `main` fue la excepción de arranque del repositorio; a partir de ahora no desarrollar directamente sobre `main`.

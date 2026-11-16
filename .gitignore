@@ -22,7 +22,8 @@ api/storage/logs/*
 Thumbs.db
 .DS_Store
 
-# Cobertura / PHPUnit
+# Cobertura / PHPUnit / Vitest
 api/coverage/
+web/coverage/
 api/.phpunit.cache/
 api/.phpunit.result.cache
