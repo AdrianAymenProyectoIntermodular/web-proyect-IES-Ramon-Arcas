@@ -1,0 +1,68 @@
+/*
+ * Sistema de diseño IES Ramón Arcas Meca.
+ * Marca: blanco + naranja #ff6900. Contrastes WCAG AA:
+ * - naranja sobre blanco 2.9:1 -> texto/enlaces naranjas usan --color-brand-ink (5.5:1);
+ * - blanco sobre naranja 2.9:1 -> sobre superficies naranjas el texto es --color-on-brand (5.7:1).
+ * El naranja puro queda para superficies, iconos, subrayados y foco.
+ */
+:root {
+  --color-brand: #ff6900;
+  --color-brand-strong: #e55e00;
+  --color-brand-ink: #b34700;
+  --color-brand-soft: #fff1e6;
+  --color-brand-tint: #ffe0c7;
+
+  --color-bg: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-alt: #faf8f6;
+  --color-border: #ece7e2;
+  --color-text: #1f1f1f;
+  --color-text-muted: #5c5650;
+  --color-on-brand: #1a1a1a;
+  --color-danger: #b3261e;
+  --color-success: #1e6b3a;
+
+  --font-sans: 'Roboto Flex', Roboto, 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --fs-xs: 0.8125rem;
+  --fs-sm: 0.9375rem;
+  --fs-md: 1.0625rem;
+  --fs-lg: 1.25rem;
+  --fs-xl: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  --fs-2xl: clamp(2rem, 1.4rem + 2.6vw, 3.25rem);
+  --fs-display: clamp(2.5rem, 1.5rem + 5vw, 5.5rem);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+  --space-9: 6rem;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  /* Elevaciones Material 3 */
+  --elevation-1: 0 1px 2px rgb(0 0 0 / 0.08), 0 1px 3px 1px rgb(0 0 0 / 0.05);
+  --elevation-2: 0 1px 2px rgb(0 0 0 / 0.1), 0 2px 6px 2px rgb(0 0 0 / 0.06);
+  --elevation-3: 0 4px 8px 3px rgb(0 0 0 / 0.07), 0 1px 3px rgb(0 0 0 / 0.1);
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --duration-short: 150ms;
+  --duration-medium: 300ms;
+  --duration-long: 600ms;
+
+  --container: 1200px;
+  --header-height: 76px;
+}
+
+@media (max-width: 960px) {
+  :root {
+    --header-height: 64px;
+  }
+}

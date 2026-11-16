@@ -1,0 +1,114 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-5);
+  height: 100%;
+  min-height: 220px;
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--elevation-1);
+  color: var(--color-text);
+  text-decoration: none;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    box-shadow var(--duration-medium) var(--ease-standard),
+    transform var(--duration-medium) var(--ease-emphasized),
+    color var(--duration-medium) var(--ease-standard);
+}
+
+/* Relleno naranja que sube desde abajo al pasar el ratón o enfocar. */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--color-brand);
+  transform: translateY(101%);
+  transition: transform var(--duration-long) var(--ease-emphasized);
+}
+
+.card:hover,
+.card:focus-visible {
+  box-shadow: var(--elevation-3);
+  transform: translateY(-4px);
+  color: var(--color-on-brand);
+}
+
+.card:hover::before,
+.card:focus-visible::before {
+  transform: translateY(0);
+}
+
+.icon {
+  width: 72px;
+  height: 72px;
+  color: var(--color-brand);
+  transition:
+    color var(--duration-medium) var(--ease-standard),
+    transform var(--duration-long) var(--ease-emphasized);
+}
+
+.card:hover .icon,
+.card:focus-visible .icon {
+  color: var(--color-on-brand);
+  transform: scale(1.08) rotate(-4deg);
+}
+
+.name {
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.arrow {
+  position: absolute;
+  top: var(--space-5);
+  right: var(--space-5);
+  font-size: var(--fs-lg);
+  opacity: 0;
+  transform: translateX(-8px);
+  transition:
+    opacity var(--duration-medium),
+    transform var(--duration-medium) var(--ease-emphasized);
+}
+
+.card:hover .arrow,
+.card:focus-visible .arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+
+  .card {
+    min-height: 170px;
+    padding: var(--space-4);
+  }
+
+  .icon {
+    width: 52px;
+    height: 52px;
+  }
+
+  .name {
+    font-size: var(--fs-md);
+  }
+}

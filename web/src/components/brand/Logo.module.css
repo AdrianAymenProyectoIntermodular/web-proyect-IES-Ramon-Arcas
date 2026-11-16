@@ -1,0 +1,32 @@
+/* Los PNG traen fondo blanco opaco: multiply lo funde con fondos claros (pie gris, degradados) */
+.logo,
+.header {
+  mix-blend-mode: multiply;
+}
+
+.logo {
+  height: auto;
+}
+
+.horizontal {
+  width: min(320px, 100%);
+}
+
+.stacked {
+  width: min(260px, 100%);
+}
+
+.icon {
+  width: 100%;
+}
+
+.header {
+  height: 48px;
+  width: auto;
+}
+
+@media (max-width: 600px) {
+  .header {
+    height: 40px;
+  }
+}

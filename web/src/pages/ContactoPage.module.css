@@ -1,0 +1,33 @@
+.layout {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: var(--space-7);
+  align-items: start;
+}
+
+.info h2 {
+  font-size: var(--fs-xl);
+}
+
+.info dl {
+  margin: 0;
+}
+
+.info dt {
+  margin-top: var(--space-4);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-brand-ink);
+}
+
+.info dd {
+  margin: var(--space-1) 0 0;
+}
+
+@media (max-width: 860px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,28 @@
+.prose {
+  max-width: 68ch;
+  font-size: var(--fs-md);
+}
+
+.prose h2 {
+  font-size: var(--fs-xl);
+  margin-top: var(--space-6);
+}
+
+.prose h2::before {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 4px;
+  margin-bottom: var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--color-brand);
+}
+
+.prose strong {
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.prose ul {
+  padding-left: var(--space-5);
+}

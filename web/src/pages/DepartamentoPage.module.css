@@ -1,0 +1,28 @@
+.layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: var(--space-7);
+}
+
+.icon {
+  display: block;
+  width: 96px;
+  height: 96px;
+  margin-bottom: var(--space-5);
+  color: var(--color-brand);
+}
+
+.intro {
+  font-size: var(--fs-lg);
+  max-width: 55ch;
+}
+
+.subtitle {
+  font-size: var(--fs-xl);
+}
+
+@media (max-width: 860px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
