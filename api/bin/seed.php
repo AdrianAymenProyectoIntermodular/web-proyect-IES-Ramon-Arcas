@@ -11,6 +11,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 use App\Auth\Password;
 use App\Config;
 use App\Database;
+use App\Seed\DemoContent;
 
 $envFile = dirname(__DIR__, 2) . '/.env';
 if (is_file($envFile)) {
@@ -46,26 +47,20 @@ if (!$exists->fetch()) {
     echo "admin user exists\n";
 }
 
-$configs = [
-    ['nombre_centro', 'IES Ramon Arcas Meca', 1],
-    ['localizacion', 'Totana, Murcia', 1],
-    ['email_contacto', 'info@iesramonarcas.example', 1],
-    ['telefono', '+34 968 000 000', 1],
-    ['intranet_url', 'https://intranet.ejemplo.local', 1],
-    ['horario_general', 'L-V 8:00-14:30', 1],
-];
 $ins = $pdo->prepare(
-    'INSERT INTO configuracion (clave, valor, publica) VALUES (?, ?, ?)
+    'INSERT INTO configuracion (clave, valor, publica) VALUES (?, ?, 1)
      ON DUPLICATE KEY UPDATE valor = VALUES(valor), publica = VALUES(publica)'
 );
-foreach ($configs as $c) {
-    $ins->execute($c);
+foreach (DemoContent::configuracion() as $clave => $valor) {
+    $ins->execute([$clave, $valor]);
 }
 
 $pdo->exec("INSERT IGNORE INTO menus (id, clave, nombre) VALUES (1, 'principal', 'Menu principal'), (2, 'pie', 'Pie de pagina')");
 
-$pdo->exec("INSERT IGNORE INTO cursos_academicos (id, etiqueta, inicio, fin, actual)
-            VALUES (1, '2025-2026', '2025-09-01', '2026-06-30', 1)");
+$pdo->exec("INSERT INTO cursos_academicos (id, etiqueta, inicio, fin, actual) VALUES
+    (1, '2025-2026', '2025-09-01', '2026-06-30', 0),
+    (2, '2026-2027', '2026-09-01', '2027-06-30', 1)
+    ON DUPLICATE KEY UPDATE actual = VALUES(actual)");
 
 $pdo->exec("INSERT IGNORE INTO categorias_documentos (id, slug, nombre_es, nombre_en, orden) VALUES
     (1, 'institucional', 'Documentos institucionales', 'Institutional documents', 1),
@@ -73,29 +68,46 @@ $pdo->exec("INSERT IGNORE INTO categorias_documentos (id, slug, nombre_es, nombr
     (3, 'horarios', 'Horarios', 'Timetables', 3),
     (4, 'secretaria', 'Secretaria', 'Secretary', 4)");
 
-// Pagina y noticia de ejemplo publicadas (antes del menú: menu_items.pagina_id FK)
-$pdo->exec("INSERT IGNORE INTO paginas (id, slug, titulo_es, titulo_en, estado, publicado_en)
-            VALUES (1, 'quienes-somos', 'Quienes somos', 'About us', 'publicado', UTC_TIMESTAMP())");
-$pdo->exec("INSERT IGNORE INTO pagina_bloques (id, pagina_id, tipo, contenido_json, orden)
-            VALUES (1, 1, 'texto', '{\"markdown_es\":\"Centro educativo en Totana.\",\"markdown_en\":\"School in Totana.\"}', 0)");
+/** Upsert por slug + reemplazo de bloques de texto Markdown. */
+$seedPagina = static function (PDO $pdo, string $slug, string $es, string $en, array $markdownBloques): void {
+    $pdo->prepare(
+        "INSERT INTO paginas (slug, titulo_es, titulo_en, estado, publicado_en)
+         VALUES (?, ?, ?, 'publicado', UTC_TIMESTAMP())
+         ON DUPLICATE KEY UPDATE titulo_es = VALUES(titulo_es), titulo_en = VALUES(titulo_en), estado = 'publicado'"
+    )->execute([$slug, $es, $en]);
+    $id = $pdo->prepare('SELECT id FROM paginas WHERE slug = ?');
+    $id->execute([$slug]);
+    $paginaId = (int) $id->fetchColumn();
 
-// Mapa de secciones de la memoria (§6.2) como árbol demostrable sin front.
-// «Acceso intranet» deja url vacía: el front resuelve configuracion.intranet_url.
-$pdo->exec("INSERT IGNORE INTO menu_items (id, menu_id, padre_id, titulo_es, titulo_en, url, pagina_id, orden) VALUES
-    (1, 1, NULL, 'Inicio', 'Home', '/', NULL, 1),
-    (2, 1, NULL, 'Organizacion', 'Organisation', '/organizacion', NULL, 2),
-    (3, 1, 2, 'Quienes somos', 'About us', NULL, 1, 1),
-    (4, 1, 2, 'Equipo directivo', 'Management team', '/organizacion/equipo-directivo', NULL, 2),
-    (5, 1, 2, 'Departamentos', 'Departments', '/organizacion/departamentos', NULL, 3),
-    (6, 1, NULL, 'Familias', 'Families', '/familias', NULL, 3),
-    (7, 1, 6, 'Documentos', 'Documents', '/familias/documentos', NULL, 1),
-    (8, 1, 6, 'Enlaces', 'Links', '/familias/enlaces', NULL, 2),
-    (9, 1, NULL, 'Ensenanzas', 'Studies', '/ensenanzas', NULL, 4),
-    (10, 1, NULL, 'Programas', 'Programmes', '/programas', NULL, 5),
-    (11, 1, NULL, 'Secretaria', 'Secretary', '/secretaria', NULL, 6),
-    (12, 1, NULL, 'Noticias', 'News', '/noticias', NULL, 7),
-    (13, 1, NULL, 'Contacto', 'Contact', '/contacto', NULL, 8),
-    (14, 2, NULL, 'Acceso intranet', 'Intranet access', NULL, NULL, 1)");
+    $pdo->prepare('DELETE FROM pagina_bloques WHERE pagina_id = ?')->execute([$paginaId]);
+    $bloque = $pdo->prepare("INSERT INTO pagina_bloques (pagina_id, tipo, contenido_json, orden) VALUES (?, 'texto', ?, ?)");
+    foreach ($markdownBloques as $orden => $markdown) {
+        $bloque->execute([$paginaId, json_encode(['markdown_es' => $markdown], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE), $orden]);
+    }
+};
+
+$seedPagina($pdo, 'quienes-somos', 'Quiénes somos', 'About us', [
+    "El **IES Ramón Arcas Meca** es un instituto público de Educación Secundaria, Bachillerato y Formación Profesional "
+    . "situado en Lorca (Murcia). Nuestro objetivo es acompañar a cada estudiante en su crecimiento académico, "
+    . "profesional y personal.",
+]);
+$historia = DemoContent::historia();
+$seedPagina($pdo, $historia['slug'], $historia['titulo_es'], $historia['titulo_en'], $historia['bloques']);
+
+// Menú principal (memoria §6.2): se reconstruye entero para que el seed sea la fuente de verdad en desarrollo.
+// «Acceso intranet» (menú pie) deja url vacía: el front resuelve configuracion.intranet_url.
+$pdo->exec('DELETE FROM menu_items WHERE menu_id IN (1, 2)');
+$menuItem = $pdo->prepare(
+    'INSERT INTO menu_items (menu_id, padre_id, titulo_es, titulo_en, url, orden) VALUES (?, ?, ?, ?, ?, ?)'
+);
+foreach (DemoContent::menuPrincipal() as $orden => $item) {
+    $menuItem->execute([1, null, $item['titulo_es'], $item['titulo_en'], $item['url'], $orden + 1]);
+    $padreId = (int) $pdo->lastInsertId();
+    foreach ($item['children'] ?? [] as $hijoOrden => $hijo) {
+        $menuItem->execute([1, $padreId, $hijo['titulo_es'], $hijo['titulo_en'], $hijo['url'], $hijoOrden + 1]);
+    }
+}
+$menuItem->execute([2, null, 'Acceso intranet', 'Intranet access', null, 1]);
 
 $pdo->exec("INSERT IGNORE INTO noticias (id, slug, titulo_es, titulo_en, resumen_es, cuerpo_es, categoria, estado, publicado_en, curso_academico_id)
             VALUES (1, 'bienvenida-curso', 'Bienvenida al curso', 'Welcome to the school year',
@@ -106,11 +118,60 @@ $pdo->exec("INSERT IGNORE INTO ensenanzas (id, slug, tipo, titulo_es, titulo_en,
             VALUES (1, 'eso', 'eso', 'Educacion Secundaria Obligatoria', 'Compulsory Secondary Education', 'publicado', UTC_TIMESTAMP(), 1),
                    (2, 'bachillerato', 'bachillerato', 'Bachillerato', 'Baccalaureate', 'publicado', UTC_TIMESTAMP(), 2)");
 
-$pdo->exec("INSERT IGNORE INTO departamentos (id, slug, nombre_es, nombre_en, estado, orden)
-            VALUES (1, 'matematicas', 'Matematicas', 'Mathematics', 'publicado', 1)");
+$dep = $pdo->prepare(
+    "INSERT INTO departamentos (slug, nombre_es, nombre_en, presentacion_es, contacto_publico, estado, orden)
+     VALUES (?, ?, ?, ?, ?, 'publicado', ?)
+     ON DUPLICATE KEY UPDATE nombre_es = VALUES(nombre_es), nombre_en = VALUES(nombre_en),
+        presentacion_es = VALUES(presentacion_es), contacto_publico = VALUES(contacto_publico), orden = VALUES(orden)"
+);
+foreach (DemoContent::departamentos() as $d) {
+    $dep->execute([$d['slug'], $d['nombre_es'], $d['nombre_en'], $d['presentacion_es'], $d['contacto_publico'], $d['orden']]);
+}
+$depIds = $pdo->query('SELECT slug, id FROM departamentos')->fetchAll(PDO::FETCH_KEY_PAIR);
 
-$pdo->exec("INSERT IGNORE INTO organos (id, slug, tipo, nombre_es, nombre_en, estado, orden)
-            VALUES (1, 'equipo-directivo', 'equipo_directivo', 'Equipo directivo', 'Management team', 'publicado', 1)");
+$persona = $pdo->prepare(
+    'INSERT INTO personas (id, nombre, biografia_es, visible_publico) VALUES (?, ?, ?, 1)
+     ON DUPLICATE KEY UPDATE nombre = VALUES(nombre), biografia_es = VALUES(biografia_es)'
+);
+foreach (DemoContent::personas() as $p) {
+    $persona->execute([$p['id'], $p['nombre'], $p['biografia_es']]);
+}
+
+$pertenencia = $pdo->prepare(
+    'INSERT INTO persona_departamento (persona_id, departamento_id, cargo_es, orden) VALUES (?, ?, ?, ?)
+     ON DUPLICATE KEY UPDATE cargo_es = VALUES(cargo_es), orden = VALUES(orden)'
+);
+foreach (DemoContent::pertenencias() as $p) {
+    $pertenencia->execute([$p['persona_id'], $depIds[$p['departamento_slug']], $p['cargo_es'], $p['orden']]);
+}
+
+$organo = $pdo->prepare(
+    "INSERT INTO organos (slug, tipo, nombre_es, nombre_en, descripcion_es, estado, orden)
+     VALUES (?, ?, ?, ?, ?, 'publicado', ?)
+     ON DUPLICATE KEY UPDATE nombre_es = VALUES(nombre_es), descripcion_es = VALUES(descripcion_es), orden = VALUES(orden)"
+);
+foreach (DemoContent::organos() as $o) {
+    $organo->execute([$o['slug'], $o['tipo'], $o['nombre_es'], $o['nombre_en'], $o['descripcion_es'], $o['orden']]);
+}
+$organoIds = $pdo->query('SELECT slug, id FROM organos')->fetchAll(PDO::FETCH_KEY_PAIR);
+
+// organo_miembros no tiene clave natural: se reemplazan los de los órganos de demo.
+$pdo->exec("DELETE om FROM organo_miembros om INNER JOIN organos o ON o.id = om.organo_id
+            WHERE o.slug IN ('equipo-directivo', 'consejo-escolar', 'claustro', 'ccp')");
+$miembro = $pdo->prepare('INSERT INTO organo_miembros (organo_id, persona_id, cargo_es, orden) VALUES (?, ?, ?, ?)');
+foreach (DemoContent::miembros() as $m) {
+    $miembro->execute([$organoIds[$m['organo_slug']], $m['persona_id'], $m['cargo_es'], $m['orden']]);
+}
+
+$evento = $pdo->prepare(
+    "INSERT INTO eventos (slug, titulo_es, tipo, descripcion_es, inicio, fin, lugar, destinatarios, curso_academico_id, estado, publicado_en)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 2, 'publicado', UTC_TIMESTAMP())
+     ON DUPLICATE KEY UPDATE titulo_es = VALUES(titulo_es), descripcion_es = VALUES(descripcion_es),
+        inicio = VALUES(inicio), fin = VALUES(fin), lugar = VALUES(lugar), destinatarios = VALUES(destinatarios)"
+);
+foreach (DemoContent::eventos(new DateTimeImmutable('now', new DateTimeZone('Europe/Madrid'))) as $e) {
+    $evento->execute([$e['slug'], $e['titulo_es'], $e['tipo'], $e['descripcion_es'], $e['inicio'], $e['fin'], $e['lugar'], $e['destinatarios']]);
+}
 
 $pdo->exec("INSERT IGNORE INTO programas (id, slug, categoria, titulo_es, titulo_en, descripcion_es, estado, publicado_en, orden)
             VALUES (1, 'erasmus-plus', 'educativo', 'Erasmus+', 'Erasmus+', 'Programa europeo de movilidad.', 'publicado', UTC_TIMESTAMP(), 1)");

@@ -1,0 +1,172 @@
+[
+    {
+        "titulo_es": "Inicio",
+        "titulo_en": "Home",
+        "url": "/"
+    },
+    {
+        "titulo_es": "Organización",
+        "titulo_en": "Organisation",
+        "url": "/organizacion",
+        "children": [
+            {
+                "titulo_es": "Quiénes somos",
+                "titulo_en": "About us",
+                "url": "/organizacion/quienes-somos"
+            },
+            {
+                "titulo_es": "Historia",
+                "titulo_en": "History",
+                "url": "/organizacion/historia"
+            },
+            {
+                "titulo_es": "Equipo directivo",
+                "titulo_en": "Management team",
+                "url": "/organizacion/organos/equipo-directivo"
+            },
+            {
+                "titulo_es": "Consejo escolar",
+                "titulo_en": "School council",
+                "url": "/organizacion/organos/consejo-escolar"
+            },
+            {
+                "titulo_es": "Claustro",
+                "titulo_en": "Teaching staff",
+                "url": "/organizacion/organos/claustro"
+            },
+            {
+                "titulo_es": "Comisión de coordinación pedagógica",
+                "titulo_en": "Pedagogical committee",
+                "url": "/organizacion/organos/ccp"
+            },
+            {
+                "titulo_es": "Departamentos",
+                "titulo_en": "Departments",
+                "url": "/organizacion/departamentos"
+            },
+            {
+                "titulo_es": "Documentos institucionales",
+                "titulo_en": "Institutional documents",
+                "url": "/organizacion/documentos"
+            },
+            {
+                "titulo_es": "Horarios",
+                "titulo_en": "Timetables",
+                "url": "/organizacion/horarios"
+            },
+            {
+                "titulo_es": "Calendario escolar",
+                "titulo_en": "School calendar",
+                "url": "/organizacion/calendario"
+            }
+        ]
+    },
+    {
+        "titulo_es": "Familias",
+        "titulo_en": "Families",
+        "url": "/familias",
+        "children": [
+            {
+                "titulo_es": "Documentos y enlaces",
+                "titulo_en": "Documents and links",
+                "url": "/familias/documentos"
+            },
+            {
+                "titulo_es": "Criterios de evaluación",
+                "titulo_en": "Assessment criteria",
+                "url": "/familias/criterios-evaluacion"
+            },
+            {
+                "titulo_es": "Atención a familias",
+                "titulo_en": "Family support",
+                "url": "/familias/atencion"
+            },
+            {
+                "titulo_es": "Tutoriales de plataformas",
+                "titulo_en": "Platform tutorials",
+                "url": "/familias/tutoriales"
+            },
+            {
+                "titulo_es": "Guía de convivencia",
+                "titulo_en": "Coexistence guide",
+                "url": "/familias/convivencia"
+            },
+            {
+                "titulo_es": "Buzón de sugerencias",
+                "titulo_en": "Suggestions box",
+                "url": "/contacto?tipo=sugerencia"
+            }
+        ]
+    },
+    {
+        "titulo_es": "Enseñanzas",
+        "titulo_en": "Studies",
+        "url": "/ensenanzas",
+        "children": [
+            {
+                "titulo_es": "ESO",
+                "titulo_en": "Secondary education",
+                "url": "/ensenanzas/eso"
+            },
+            {
+                "titulo_es": "Bachillerato",
+                "titulo_en": "Baccalaureate",
+                "url": "/ensenanzas/bachillerato"
+            },
+            {
+                "titulo_es": "Formación Profesional",
+                "titulo_en": "Vocational training",
+                "url": "/ensenanzas/fp"
+            },
+            {
+                "titulo_es": "Materias optativas",
+                "titulo_en": "Electives",
+                "url": "/ensenanzas/optativas"
+            }
+        ]
+    },
+    {
+        "titulo_es": "Secretaría",
+        "titulo_en": "Secretary",
+        "url": "/secretaria",
+        "children": [
+            {
+                "titulo_es": "Cita previa",
+                "titulo_en": "Appointments",
+                "url": "/secretaria/cita-previa"
+            },
+            {
+                "titulo_es": "Trámites administrativos",
+                "titulo_en": "Procedures",
+                "url": "/secretaria/tramites"
+            }
+        ]
+    },
+    {
+        "titulo_es": "Programas",
+        "titulo_en": "Programmes",
+        "url": "/programas"
+    },
+    {
+        "titulo_es": "Noticias",
+        "titulo_en": "News",
+        "url": "/noticias",
+        "children": [
+            {
+                "titulo_es": "Actualidad",
+                "titulo_en": "Latest news",
+                "url": "/noticias"
+            },
+            {
+                "titulo_es": "Agenda de eventos",
+                "titulo_en": "Events",
+                "url": "/eventos"
+            }
+        ]
+    },
+    {
+        "titulo_es": "Contacto",
+        "titulo_en": "Contact",
+        "url": "/contacto"
+    }
+]
