@@ -299,6 +299,210 @@ final class DemoContentTest extends TestCase
         $this->assertSame($fixture, DemoContent::menuPrincipal());
     }
 
+    // --- Noticias ---
+
+    public function testNoticiasHaveUniqueSlugsAndVisibleDates(): void
+    {
+        $now = new DateTimeImmutable('2026-11-25 10:00:00');
+        $noticias = DemoContent::noticias($now);
+        $this->assertGreaterThan(6, count($noticias), 'el listado debe paginar con page size 6');
+        $slugs = array_column($noticias, 'slug');
+        $this->assertSame($slugs, array_values(array_unique($slugs)));
+
+        foreach ($noticias as $n) {
+            $this->assertMatchesRegularExpression(self::SLUG_PATTERN, $n['slug']);
+            $this->assertLessThanOrEqual(200, mb_strlen($n['titulo_es']));
+            $this->assertNotSame('', trim($n['resumen_es']));
+            $this->assertNotSame('', trim($n['cuerpo_es']));
+            $this->assertContains($n['destacado'], [0, 1]);
+            $this->assertNotSame('', trim($n['categoria']));
+
+            $publicado = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $n['publicado_en']);
+            $this->assertNotFalse($publicado, 'publicado_en en formato DATETIME');
+            $this->assertLessThanOrEqual($now, $publicado, 'una noticia futura no sería visible');
+            $this->assertDoesNotMatchRegularExpression('/<[a-z\/!]/i', $n['cuerpo_es'], 'Markdown sin HTML');
+        }
+    }
+
+    public function testNoticiasAreDeterministicAndPaginate(): void
+    {
+        $now = new DateTimeImmutable('2026-11-25 10:00:00');
+        $this->assertSame(DemoContent::noticias($now), DemoContent::noticias($now));
+        $this->assertCount(6, array_slice(DemoContent::noticias($now), 6), 'hay una segunda página completa');
+    }
+
+    // --- Enseñanzas y optativas ---
+
+    public function testEnsenanzasCoverEsoBachilleratoAndFp(): void
+    {
+        $tipos = array_column(DemoContent::ensenanzas(), 'tipo');
+        foreach (['eso', 'bachillerato', 'fp'] as $tipo) {
+            $this->assertContains($tipo, $tipos);
+        }
+        $slugs = array_column(DemoContent::ensenanzas(), 'slug');
+        $this->assertSame($slugs, array_values(array_unique($slugs)));
+        $this->assertContains('eso', $slugs);
+        $this->assertContains('bachillerato', $slugs);
+    }
+
+    public function testEnsenanzasRespectSchemaAndOrder(): void
+    {
+        foreach (DemoContent::ensenanzas() as $i => $e) {
+            $this->assertSame($i + 1, $e['orden'], 'orden consecutivo para el listado');
+            $this->assertContains($e['tipo'], ['eso', 'bachillerato', 'fp', 'otro']);
+            $this->assertMatchesRegularExpression(self::SLUG_PATTERN, $e['slug']);
+            $this->assertLessThanOrEqual(200, mb_strlen($e['titulo_es']));
+            $this->assertLessThanOrEqual(120, mb_strlen($e['duracion_es']));
+            foreach (['requisitos_es', 'duracion_es', 'salidas_es'] as $campo) {
+                $this->assertNotSame('', trim($e[$campo]), "$campo en {$e['slug']}");
+            }
+        }
+    }
+
+    public function testModulosReferenceExistingEnsenanzas(): void
+    {
+        $slugs = array_column(DemoContent::ensenanzas(), 'slug');
+        $porEnsenanza = [];
+        foreach (DemoContent::modulos() as $m) {
+            $this->assertContains($m['ensenanza_slug'], $slugs);
+            $this->assertGreaterThan(0, $m['horas']);
+            $this->assertNotSame('', trim($m['nombre_es']));
+            $porEnsenanza[$m['ensenanza_slug']][] = $m['orden'];
+        }
+        foreach ($porEnsenanza as $slug => $ordenes) {
+            $this->assertSame(range(1, count($ordenes)), $ordenes, "orden de módulos en $slug");
+        }
+    }
+
+    public function testOptativasReferenceExistingRows(): void
+    {
+        $materias = array_column(DemoContent::materiasOptativas(), 'slug');
+        $this->assertSame($materias, array_values(array_unique($materias)));
+        $ensenanzas = array_column(DemoContent::ensenanzas(), 'slug');
+
+        $claves = [];
+        foreach (DemoContent::ofertasOptativas() as $o) {
+            $this->assertContains($o['materia_slug'], $materias);
+            $this->assertContains($o['ensenanza_slug'], $ensenanzas);
+            $this->assertNotSame('', trim($o['nivel']));
+            $clave = implode(':', $o);
+            $this->assertNotContains($clave, $claves, 'oferta duplicada');
+            $claves[] = $clave;
+        }
+    }
+
+    // --- Programas ---
+
+    public function testProgramasAreBetweenEightAndTwelve(): void
+    {
+        $programas = DemoContent::programas();
+        $this->assertGreaterThanOrEqual(8, count($programas));
+        $this->assertLessThanOrEqual(12, count($programas));
+    }
+
+    public function testProgramasHaveValidCategoriesAndDepartamentos(): void
+    {
+        $depSlugs = array_column(DemoContent::departamentos(), 'slug');
+        $slugs = [];
+        foreach (DemoContent::programas() as $p) {
+            $this->assertMatchesRegularExpression(self::SLUG_PATTERN, $p['slug']);
+            $this->assertContains($p['categoria'], ['educativo', 'plan_centro', 'actividad', 'otro']);
+            $this->assertLessThanOrEqual(200, mb_strlen($p['titulo_es']));
+            $this->assertNotSame('', trim($p['descripcion_es']));
+            $this->assertNotEmpty($p['departamentos'], "{$p['slug']} sin departamentos");
+            foreach ($p['departamentos'] as $depSlug) {
+                $this->assertContains($depSlug, $depSlugs);
+            }
+            $slugs[] = $p['slug'];
+        }
+        $this->assertSame($slugs, array_values(array_unique($slugs)));
+    }
+
+    public function testProgramasCoverAllCategories(): void
+    {
+        $categorias = array_unique(array_column(DemoContent::programas(), 'categoria'));
+        $this->assertEqualsCanonicalizing(['educativo', 'plan_centro', 'actividad', 'otro'], $categorias);
+    }
+
+    // --- Páginas editoriales ---
+
+    public function testPaginasEditorialesAreMarkdownWithoutHtml(): void
+    {
+        $slugs = [];
+        foreach (DemoContent::paginas() as $p) {
+            $this->assertMatchesRegularExpression(self::SLUG_PATTERN, $p['slug']);
+            $this->assertLessThanOrEqual(200, mb_strlen($p['titulo_es']));
+            $this->assertNotEmpty($p['bloques']);
+            foreach ($p['bloques'] as $bloque) {
+                $this->assertStringStartsWith('## ', $bloque);
+                $this->assertDoesNotMatchRegularExpression('/<[a-z\/!]/i', $bloque);
+            }
+            $slugs[] = $p['slug'];
+        }
+        $this->assertSame($slugs, array_values(array_unique($slugs)));
+        foreach (['horarios', 'calendario', 'criterios-evaluacion', 'atencion', 'tutoriales', 'convivencia', 'cita-previa', 'tramites'] as $slug) {
+            $this->assertContains($slug, $slugs);
+        }
+    }
+
+    // --- Documentos, archivos y enlaces ---
+
+    public function testArchivosDemoExistAndArePdf(): void
+    {
+        $dir = dirname(__DIR__, 2) . '/database/seed-files';
+        $ficheros = [];
+        foreach (DemoContent::archivosDemo() as $archivo) {
+            $this->assertSame('application/pdf', $archivo['mime']);
+            $ruta = $dir . '/' . $archivo['fichero'];
+            $this->assertFileExists($ruta);
+            $this->assertStringStartsWith('%PDF-', (string) file_get_contents($ruta));
+            $ficheros[] = $archivo['fichero'];
+        }
+        $this->assertSame($ficheros, array_values(array_unique($ficheros)));
+    }
+
+    public function testDocumentosReferenceCategoriesAndArchivos(): void
+    {
+        $categorias = array_column(DemoContent::categoriasDocumentos(), 'slug');
+        $archivos = array_keys(DemoContent::archivosDemo());
+        $ensenanzas = array_column(DemoContent::ensenanzas(), 'slug');
+        $claves = [];
+
+        foreach (DemoContent::documentos() as $d) {
+            $this->assertContains($d['categoria_slug'], $categorias);
+            $this->assertContains($d['archivo'], $archivos);
+            $this->assertNotSame('', trim($d['titulo_es']));
+            $this->assertNotSame('', trim($d['descripcion_es']));
+            if ($d['ensenanza_slug'] !== null) {
+                $this->assertContains($d['ensenanza_slug'], $ensenanzas);
+            }
+            $clave = $d['titulo_es'] . ':' . $d['categoria_slug'];
+            $this->assertNotContains($clave, $claves, 'documento duplicado');
+            $claves[] = $clave;
+        }
+    }
+
+    public function testEnlacesArePublicSafeAndGrouped(): void
+    {
+        $this->assertNotEmpty(DemoContent::enlaces());
+        foreach (DemoContent::enlaces() as $e) {
+            $this->assertNotSame('', trim($e['grupo']));
+            $this->assertNotSame('', trim($e['titulo_es']));
+            $this->assertStringStartsWith('https://', $e['url']);
+            $this->assertStringContainsString('.example', $e['url'], 'sin dependencias externas reales');
+            $this->assertDoesNotMatchRegularExpression('/password|secret|token/i', $e['url']);
+        }
+    }
+
+    public function testCategoriasDocumentosMatchDocumentos(): void
+    {
+        $categorias = array_column(DemoContent::categoriasDocumentos(), 'slug');
+        $this->assertSame($categorias, array_values(array_unique($categorias)));
+        foreach (array_unique(array_column(DemoContent::documentos(), 'categoria_slug')) as $usada) {
+            $this->assertContains($usada, $categorias);
+        }
+    }
+
     // --- Configuración ---
 
     public function testConfiguracionIsPublicSafe(): void

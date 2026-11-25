@@ -1,4 +1,5 @@
 import { getPagina } from '../api/endpoints';
+import { DocumentosPanel } from '../components/content/DocumentosPanel';
 import { AsyncState } from '../components/ui/AsyncState';
 import { Markdown } from '../components/ui/Markdown';
 import { PageHeader } from '../components/ui/PageHeader';
@@ -11,10 +12,14 @@ import { NotFoundPage } from './NotFoundPage';
 interface PaginaPageProps {
   slug: string;
   eyebrow?: string;
+  /** Categorías de documentos que se muestran al final de la página. */
+  documentosCategoria?: string;
+  /** Grupos de enlaces externos que se muestran al final de la página. */
+  enlacesGrupos?: string[];
 }
 
-/** Página editorial genérica (`GET /paginas/{slug}`). Los bloques no textuales llegarán en E3/E4. */
-export function PaginaPage({ slug, eyebrow }: PaginaPageProps) {
+/** Página editorial genérica (`GET /paginas/{slug}`) con documentos y enlaces opcionales. */
+export function PaginaPage({ slug, eyebrow, documentosCategoria, enlacesGrupos }: PaginaPageProps) {
   const state = useApi((signal) => getPagina(slug, signal), [slug]);
   return (
     <AsyncState state={state} loadingLabel="Cargando…" notFound={<NotFoundPage />}>
@@ -33,6 +38,12 @@ export function PaginaPage({ slug, eyebrow }: PaginaPageProps) {
                     </Reveal>
                   ) : null;
                 })}
+              {(documentosCategoria || (enlacesGrupos && enlacesGrupos.length > 0)) && (
+                <DocumentosPanel
+                  categorias={documentosCategoria ? [documentosCategoria] : []}
+                  gruposEnlaces={enlacesGrupos}
+                />
+              )}
             </div>
           </section>
         </>
