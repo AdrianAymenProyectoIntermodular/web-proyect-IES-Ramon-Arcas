@@ -3,6 +3,13 @@ export const API_BASE: string = import.meta.env.VITE_API_BASE ?? '/api/v1';
 export type QueryValue = string | number | boolean | null | undefined;
 export type Query = Record<string, QueryValue>;
 
+export type ApiMethod = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
+
+export interface RequestOptions {
+  signal?: AbortSignal;
+  headers?: Record<string, string>;
+}
+
 /** Error del contrato `{ error: { code, message, fields? } }` (ver AGENTS.md). */
 export class ApiError extends Error {
   readonly status: number;
@@ -19,6 +26,14 @@ export class ApiError extends Error {
 
   get isNotFound(): boolean {
     return this.status === 404;
+  }
+
+  get isUnauthenticated(): boolean {
+    return this.status === 401;
+  }
+
+  get isForbidden(): boolean {
+    return this.status === 403;
   }
 }
 
@@ -54,7 +69,7 @@ async function toApiError(response: Response): Promise<ApiError> {
   return new ApiError(response.status, 'http_error', `Error HTTP ${response.status}`);
 }
 
-async function request<T>(method: 'GET' | 'POST', path: string, init: RequestInit & { query?: Query } = {}): Promise<T> {
+async function request<T>(method: ApiMethod, path: string, init: RequestInit & { query?: Query } = {}): Promise<T> {
   const { query, headers, ...rest } = init;
   let response: Response;
   try {
@@ -77,10 +92,35 @@ export function apiGet<T>(path: string, query?: Query, signal?: AbortSignal): Pr
   return request<T>('GET', path, { query, signal });
 }
 
-export function apiPost<T>(path: string, body: unknown, signal?: AbortSignal): Promise<T> {
-  return request<T>('POST', path, {
+function jsonInit(body: unknown, options: RequestOptions): RequestInit {
+  return {
     body: JSON.stringify(body),
-    headers: { 'Content-Type': 'application/json' },
-    signal,
+    headers: { 'Content-Type': 'application/json', ...options.headers },
+    signal: options.signal,
+  };
+}
+
+export function apiPost<T>(path: string, body: unknown, options: RequestOptions = {}): Promise<T> {
+  return request<T>('POST', path, jsonInit(body, options));
+}
+
+export function apiPatch<T>(path: string, body: unknown, options: RequestOptions = {}): Promise<T> {
+  return request<T>('PATCH', path, jsonInit(body, options));
+}
+
+export function apiPut<T>(path: string, body: unknown, options: RequestOptions = {}): Promise<T> {
+  return request<T>('PUT', path, jsonInit(body, options));
+}
+
+export function apiDelete<T = void>(path: string, options: RequestOptions = {}): Promise<T> {
+  return request<T>('DELETE', path, { headers: options.headers, signal: options.signal });
+}
+
+/** Subida multipart: el navegador fija el Content-Type con el boundary. */
+export function apiUpload<T>(path: string, form: FormData, options: RequestOptions = {}): Promise<T> {
+  return request<T>('POST', path, {
+    body: form,
+    headers: options.headers,
+    signal: options.signal,
   });
 }

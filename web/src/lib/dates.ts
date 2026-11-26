@@ -9,6 +9,10 @@ export interface DateParts {
 const DB_DATETIME = /^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2})(?::\d{2})?)?$/;
 
 const MONTHS_SHORT = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+const MONTHS_LONG = [
+  'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+  'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
+];
 const WEEKDAYS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
 
 /**
@@ -54,4 +58,19 @@ export function formatEventRange(inicio: string, fin: string | null): string {
 /** Fecha local del navegador en formato `YYYY-MM-DD` (filtro `desde` de la API). */
 export function toQueryDate(date: Date): string {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+/** "19 de noviembre de 2026" a partir de un DATETIME de la API. */
+export function formatLongDate(value: string): string {
+  const parts = parseDbDateTime(value);
+  if (!parts) return '';
+  return `${parts.day} de ${MONTHS_LONG[parts.month - 1] ?? ''} de ${parts.year}`;
+}
+
+/** DATETIME UTC `YYYY-MM-DD HH:MM:SS`, formato que usa MariaDB en `publicado_en`. */
+export function toDbDateTime(date: Date = new Date()): string {
+  return (
+    `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())} ` +
+    `${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}:${pad(date.getUTCSeconds())}`
+  );
 }

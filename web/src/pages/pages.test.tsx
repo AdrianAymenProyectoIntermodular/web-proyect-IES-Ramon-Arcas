@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import type { Departamento, Organo, Pagina, ProfesorDepartamento } from '../api/types';
 import { FALLBACK_NAVIGATION } from '../lib/navigation';
-import { PENDING_SECTIONS, SECTION_INDEXES } from '../routes';
+import { SECTION_INDEXES } from '../routes';
 import { CONFIG_FIXTURE, mockApi, renderRoute, type MockReply } from '../test/utils';
 
 const CONFIG: Record<string, MockReply> = { '/api/v1/configuracion': { body: { data: CONFIG_FIXTURE } } };
@@ -291,22 +291,30 @@ describe('Enrutado', () => {
     expect(within(main).getAllByRole('link').map((a) => a.getAttribute('href'))).toEqual(section.children.map((c) => c.to));
   });
 
-  it.each(PENDING_SECTIONS)('$path muestra "en preparación"', async ({ path, title }) => {
-    mockApi(CONFIG);
-    renderRoute(path);
-    expect(await h1(title)).toBeInTheDocument();
-    expect(screen.getByText(/Estamos preparando esta sección/)).toBeInTheDocument();
-  });
-
   it('cada enlace interno del menú tiene una ruta (ninguno cae en 404)', async () => {
     const leaves = FALLBACK_NAVIGATION.flatMap((item) => [item.to, ...item.children.map((c) => c.to)]).map((to) => to.split('?')[0]!);
     const routed = new Set([
       '/',
       ...SECTION_INDEXES,
-      ...PENDING_SECTIONS.map((p) => p.path),
       '/organizacion/quienes-somos',
       '/organizacion/historia',
       '/organizacion/departamentos',
+      '/organizacion/documentos',
+      '/organizacion/horarios',
+      '/organizacion/calendario',
+      '/familias/documentos',
+      '/familias/criterios-evaluacion',
+      '/familias/atencion',
+      '/familias/tutoriales',
+      '/familias/convivencia',
+      '/ensenanzas/eso',
+      '/ensenanzas/bachillerato',
+      '/ensenanzas/fp',
+      '/ensenanzas/optativas',
+      '/secretaria/cita-previa',
+      '/secretaria/tramites',
+      '/programas',
+      '/noticias',
       '/eventos',
       '/contacto',
     ]);

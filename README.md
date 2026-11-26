@@ -4,6 +4,7 @@ Web informativa del centro (Lorca, Murcia): API REST en PHP + frontend React/Typ
 
 - **1ª entrega (tag `Entrega1`):** contrato OpenAPI + API REST operativa + documentación de diseño.
 - **2ª entrega:** frontend público en `web/` (identidad visual, menú responsive, Inicio con agenda, departamentos, historia, órganos de gobierno y contacto) + seed de demostración + tests.
+- **3ª/4ª entrega (E3–E4):** secciones públicas restantes (Noticias, Enseñanzas, Programas, Familias, Secretaría, documentos) y panel admin mínimo. Detalle en [docs/memoria-modulos.md](docs/memoria-modulos.md).
 - Roadmap y reparto: [docs/fases.md](docs/fases.md) y [docs/proyecto-intermodular.md](docs/proyecto-intermodular.md).
 
 Los datos de personas y eventos del seed son **ficticios**; la historia del centro es real y sus fuentes están citadas.
@@ -134,6 +135,7 @@ docker/        Nginx + imagen PHP
 | [docs/permisos.md](docs/permisos.md) | Matriz RBAC |
 | [docs/fases.md](docs/fases.md) | Hitos y roadmap (fuera de OpenAPI) |
 | [docs/proyecto-intermodular.md](docs/proyecto-intermodular.md) | Memoria (Proyecto 2), entregas, reparto, fuentes de la historia |
+| [docs/memoria-modulos.md](docs/memoria-modulos.md) | Módulos implementados en E3–E4, endpoints, seed, tests y demo |
 | [api/README.md](api/README.md) | Cómo añadir un endpoint |
 | [web/README.md](web/README.md) | Frontend: estructura, scripts y cómo añadir una sección |
 
