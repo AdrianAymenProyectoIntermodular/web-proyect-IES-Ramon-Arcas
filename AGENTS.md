@@ -28,7 +28,7 @@ Memoria (Proyecto 2), entregas E1–E4, reparto con el compañero, fuentes de la
 
 ## Arranque rápido
 
-Ver [README.md](README.md). Resumen: copiar `.env.example` → `.env`, `docker compose up -d --build`, `composer install`, `php bin/migrate.php`, `php bin/seed.php`. Frontend: `cd web && npm install && npm run dev`.
+Ver [README.md](README.md). Resumen: copiar `.env.example` → `.env`, `docker compose up -d --build`, `composer install`, `php bin/migrate.php`, `php bin/seed.php`. Frontend: `cd frontend && npm install && npm run dev`.
 
 ## Arquitectura
 
