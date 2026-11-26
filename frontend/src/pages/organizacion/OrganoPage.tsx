@@ -1,11 +1,11 @@
 import { useParams } from 'react-router';
-import { getOrgano } from '../api/endpoints';
-import { PersonList } from '../components/people/PersonList';
-import { AsyncState, EmptyState } from '../components/ui/AsyncState';
-import { PageHeader } from '../components/ui/PageHeader';
-import { useApi } from '../hooks/useApi';
-import { pick } from '../lib/i18n';
-import { NotFoundPage } from './NotFoundPage';
+import { getOrgano } from '../../api/endpoints';
+import { PersonList } from '../../components/people/PersonList';
+import { AsyncState, EmptyState } from '../../components/ui/AsyncState';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { useApi } from '../../hooks/useApi';
+import { pick } from '../../lib/i18n';
+import { NotFoundPage } from '../comunes/NotFoundPage';
 
 /** Equipo directivo, consejo escolar, claustro y CCP (`GET /organos/{slug}`). */
 export function OrganoPage() {

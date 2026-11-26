@@ -1,12 +1,12 @@
 import { Link } from 'react-router';
-import { getEnsenanzas } from '../api/endpoints';
-import type { Ensenanza } from '../api/types';
-import { AsyncState, EmptyState } from '../components/ui/AsyncState';
-import { PageHeader } from '../components/ui/PageHeader';
-import { Reveal } from '../components/ui/Reveal';
-import { useApi } from '../hooks/useApi';
-import { pick } from '../lib/i18n';
-import styles from './catalog.module.css';
+import { getEnsenanzas } from '../../api/endpoints';
+import type { Ensenanza } from '../../api/types';
+import { AsyncState, EmptyState } from '../../components/ui/AsyncState';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { Reveal } from '../../components/ui/Reveal';
+import { useApi } from '../../hooks/useApi';
+import { pick } from '../../lib/i18n';
+import styles from '../../styles/catalog.module.css';
 
 /** Ciclos de Formación Profesional agrupados por familia profesional. */
 export function FpPage() {

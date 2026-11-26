@@ -1,6 +1,6 @@
-import { PageHeader } from '../components/ui/PageHeader';
-import { DocumentosPanel } from '../components/content/DocumentosPanel';
-import styles from './catalog.module.css';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { DocumentosPanel } from '../../components/content/DocumentosPanel';
+import styles from '../../styles/catalog.module.css';
 
 interface DocumentosPageProps {
   title: string;

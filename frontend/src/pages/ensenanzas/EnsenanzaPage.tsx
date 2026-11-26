@@ -1,12 +1,12 @@
 import { Link, useParams } from 'react-router';
-import { getDocumentos, getEnsenanza, getModulos } from '../api/endpoints';
-import type { Documento, Ensenanza, Modulo } from '../api/types';
-import { AsyncState } from '../components/ui/AsyncState';
-import { PageHeader } from '../components/ui/PageHeader';
-import { useApi } from '../hooks/useApi';
-import { pick } from '../lib/i18n';
-import { NotFoundPage } from './NotFoundPage';
-import styles from './catalog.module.css';
+import { getDocumentos, getEnsenanza, getModulos } from '../../api/endpoints';
+import type { Documento, Ensenanza, Modulo } from '../../api/types';
+import { AsyncState } from '../../components/ui/AsyncState';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { useApi } from '../../hooks/useApi';
+import { pick } from '../../lib/i18n';
+import { NotFoundPage } from '../comunes/NotFoundPage';
+import styles from '../../styles/catalog.module.css';
 
 interface EnsenanzaData {
   ensenanza: Ensenanza;

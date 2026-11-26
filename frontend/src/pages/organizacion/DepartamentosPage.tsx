@@ -1,8 +1,8 @@
-import { getDepartamentos } from '../api/endpoints';
-import { DepartmentGrid } from '../components/departments/DepartmentGrid';
-import { AsyncState, EmptyState } from '../components/ui/AsyncState';
-import { PageHeader } from '../components/ui/PageHeader';
-import { useApi } from '../hooks/useApi';
+import { getDepartamentos } from '../../api/endpoints';
+import { DepartmentGrid } from '../../components/departments/DepartmentGrid';
+import { AsyncState, EmptyState } from '../../components/ui/AsyncState';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { useApi } from '../../hooks/useApi';
 
 export function DepartamentosPage() {
   const state = useApi((signal) => getDepartamentos(signal), []);

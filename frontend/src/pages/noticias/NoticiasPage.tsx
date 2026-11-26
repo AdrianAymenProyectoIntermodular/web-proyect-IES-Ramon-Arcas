@@ -1,14 +1,14 @@
 import { Link, useSearchParams } from 'react-router';
-import { getNoticias } from '../api/endpoints';
-import { AsyncState, EmptyState } from '../components/ui/AsyncState';
-import { PageHeader } from '../components/ui/PageHeader';
-import { Pagination } from '../components/ui/Pagination';
-import { Reveal } from '../components/ui/Reveal';
-import { useApi } from '../hooks/useApi';
-import { formatLongDate } from '../lib/dates';
-import { noticiaCategoriaLabel } from '../lib/labels';
-import { pick } from '../lib/i18n';
-import styles from './catalog.module.css';
+import { getNoticias } from '../../api/endpoints';
+import { AsyncState, EmptyState } from '../../components/ui/AsyncState';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { Pagination } from '../../components/ui/Pagination';
+import { Reveal } from '../../components/ui/Reveal';
+import { useApi } from '../../hooks/useApi';
+import { formatLongDate } from '../../lib/dates';
+import { noticiaCategoriaLabel } from '../../lib/labels';
+import { pick } from '../../lib/i18n';
+import styles from '../../styles/catalog.module.css';
 
 const PAGE_SIZE = 6;
 

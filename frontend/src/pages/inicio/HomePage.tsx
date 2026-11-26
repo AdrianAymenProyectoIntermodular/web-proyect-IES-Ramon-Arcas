@@ -1,10 +1,10 @@
 import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import { Link } from 'react-router';
-import { Logo } from '../components/brand/Logo';
-import { EventPanel } from '../components/events/EventPanel';
-import { Reveal, SplitText } from '../components/ui/Reveal';
-import { useConfig } from '../context/ConfigContext';
-import { useDocumentTitle } from '../hooks/useDocumentTitle';
+import { Logo } from '../../components/brand/Logo';
+import { EventPanel } from '../../components/events/EventPanel';
+import { Reveal, SplitText } from '../../components/ui/Reveal';
+import { useConfig } from '../../context/ConfigContext';
+import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import styles from './HomePage.module.css';
 
 const QUICK_LINKS = [

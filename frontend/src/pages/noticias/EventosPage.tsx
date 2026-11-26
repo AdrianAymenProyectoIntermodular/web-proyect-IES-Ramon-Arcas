@@ -1,5 +1,5 @@
-import { EventPanel } from '../components/events/EventPanel';
-import { PageHeader } from '../components/ui/PageHeader';
+import { EventPanel } from '../../components/events/EventPanel';
+import { PageHeader } from '../../components/ui/PageHeader';
 
 export function EventosPage() {
   return (

@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router';
-import { ContactForm } from '../components/contact/ContactForm';
-import { PageHeader } from '../components/ui/PageHeader';
-import { useConfig } from '../context/ConfigContext';
+import { ContactForm } from '../../components/contact/ContactForm';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { useConfig } from '../../context/ConfigContext';
 import styles from './ContactoPage.module.css';
 
 export function ContactoPage() {

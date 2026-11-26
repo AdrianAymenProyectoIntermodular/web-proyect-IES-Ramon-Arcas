@@ -2,7 +2,7 @@ import { getCategoriasDocumentos, getDocumentos, getEnlaces } from '../../api/en
 import { useApi } from '../../hooks/useApi';
 import { AsyncState, EmptyState } from '../ui/AsyncState';
 import { pick } from '../../lib/i18n';
-import styles from '../../pages/catalog.module.css';
+import styles from '../../styles/catalog.module.css';
 
 interface DocumentosPanelProps {
   /** Slugs de `categorias_documentos` que se muestran, en ese orden. */

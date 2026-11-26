@@ -1,12 +1,12 @@
 import { Link, useParams } from 'react-router';
-import { getPrograma } from '../api/endpoints';
-import { AsyncState } from '../components/ui/AsyncState';
-import { PageHeader } from '../components/ui/PageHeader';
-import { useApi } from '../hooks/useApi';
-import { programaCategoriaLabel } from '../lib/labels';
-import { pick } from '../lib/i18n';
-import { NotFoundPage } from './NotFoundPage';
-import styles from './catalog.module.css';
+import { getPrograma } from '../../api/endpoints';
+import { AsyncState } from '../../components/ui/AsyncState';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { useApi } from '../../hooks/useApi';
+import { programaCategoriaLabel } from '../../lib/labels';
+import { pick } from '../../lib/i18n';
+import { NotFoundPage } from '../comunes/NotFoundPage';
+import styles from '../../styles/catalog.module.css';
 
 export function ProgramaPage() {
   const { slug = '' } = useParams<{ slug: string }>();

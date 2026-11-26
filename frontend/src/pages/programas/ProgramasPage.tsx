@@ -1,13 +1,13 @@
 import { Link } from 'react-router';
-import { getProgramas } from '../api/endpoints';
-import type { Programa } from '../api/types';
-import { AsyncState, EmptyState } from '../components/ui/AsyncState';
-import { PageHeader } from '../components/ui/PageHeader';
-import { Reveal } from '../components/ui/Reveal';
-import { useApi } from '../hooks/useApi';
-import { PROGRAMA_CATEGORIAS } from '../lib/labels';
-import { pick } from '../lib/i18n';
-import styles from './catalog.module.css';
+import { getProgramas } from '../../api/endpoints';
+import type { Programa } from '../../api/types';
+import { AsyncState, EmptyState } from '../../components/ui/AsyncState';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { Reveal } from '../../components/ui/Reveal';
+import { useApi } from '../../hooks/useApi';
+import { PROGRAMA_CATEGORIAS } from '../../lib/labels';
+import { pick } from '../../lib/i18n';
+import styles from '../../styles/catalog.module.css';
 
 /** Hub de programas agrupado por categoría del contrato. */
 export function ProgramasPage() {

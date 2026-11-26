@@ -1,14 +1,14 @@
 import { Link, useParams } from 'react-router';
-import { getDepartamento, getProfesorado } from '../api/endpoints';
-import type { Departamento, ProfesorDepartamento } from '../api/types';
-import { DepartmentIcon } from '../components/departments/DepartmentIcon';
-import { PersonList } from '../components/people/PersonList';
-import { AsyncState, EmptyState } from '../components/ui/AsyncState';
-import { PageHeader } from '../components/ui/PageHeader';
-import { Reveal } from '../components/ui/Reveal';
-import { useApi } from '../hooks/useApi';
-import { pick } from '../lib/i18n';
-import { NotFoundPage } from './NotFoundPage';
+import { getDepartamento, getProfesorado } from '../../api/endpoints';
+import type { Departamento, ProfesorDepartamento } from '../../api/types';
+import { DepartmentIcon } from '../../components/departments/DepartmentIcon';
+import { PersonList } from '../../components/people/PersonList';
+import { AsyncState, EmptyState } from '../../components/ui/AsyncState';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { Reveal } from '../../components/ui/Reveal';
+import { useApi } from '../../hooks/useApi';
+import { pick } from '../../lib/i18n';
+import { NotFoundPage } from '../comunes/NotFoundPage';
 import styles from './DepartamentoPage.module.css';
 
 interface DepartamentoDetalle {

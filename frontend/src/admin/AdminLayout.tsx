@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { Navigate, NavLink, Outlet, useLocation } from 'react-router';
-import { Loading } from '../../components/ui/AsyncState';
-import { useAdminSession } from '../../context/AdminSessionContext';
+import { Loading } from '../components/ui/AsyncState';
+import { useAdminSession } from './context/AdminSessionContext';
 import styles from './admin.module.css';
 
 const navClass = ({ isActive }: { isActive: boolean }) =>

@@ -1,14 +1,14 @@
 import { Link, useParams } from 'react-router';
-import { getNoticia } from '../api/endpoints';
-import { AsyncState } from '../components/ui/AsyncState';
-import { Markdown } from '../components/ui/Markdown';
-import { PageHeader } from '../components/ui/PageHeader';
-import { useApi } from '../hooks/useApi';
-import { formatLongDate } from '../lib/dates';
-import { noticiaCategoriaLabel } from '../lib/labels';
-import { pick } from '../lib/i18n';
-import { NotFoundPage } from './NotFoundPage';
-import styles from './catalog.module.css';
+import { getNoticia } from '../../api/endpoints';
+import { AsyncState } from '../../components/ui/AsyncState';
+import { Markdown } from '../../components/ui/Markdown';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { useApi } from '../../hooks/useApi';
+import { formatLongDate } from '../../lib/dates';
+import { noticiaCategoriaLabel } from '../../lib/labels';
+import { pick } from '../../lib/i18n';
+import { NotFoundPage } from '../comunes/NotFoundPage';
+import styles from '../../styles/catalog.module.css';
 
 export function NoticiaPage() {
   const { slug = '' } = useParams<{ slug: string }>();

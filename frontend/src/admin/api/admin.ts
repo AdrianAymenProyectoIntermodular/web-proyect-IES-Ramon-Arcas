@@ -1,5 +1,5 @@
-import { apiDelete, apiGet, apiPatch, apiPost, apiUpload } from './client';
-import type { Paginated } from './types';
+import { apiDelete, apiGet, apiPatch, apiPost, apiUpload } from '../../api/client';
+import type { Paginated } from '../../api/types';
 
 export type AdminRole = 'admin' | 'editor' | 'secretaria';
 

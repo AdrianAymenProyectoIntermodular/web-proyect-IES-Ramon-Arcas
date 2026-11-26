@@ -7,14 +7,14 @@ import {
   patchAdminDocumento,
   uploadAdminArchivo,
   type AdminDocumento,
-} from '../../api/admin';
+} from '../api/admin';
 import { ApiError } from '../../api/client';
 import { AsyncState } from '../../components/ui/AsyncState';
-import { useAdminSession } from '../../context/AdminSessionContext';
+import { useAdminSession } from '../context/AdminSessionContext';
 import { useApi } from '../../hooks/useApi';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { toDbDateTime } from '../../lib/dates';
-import styles from './admin.module.css';
+import styles from '../admin.module.css';
 
 interface FormState {
   id: number | null;

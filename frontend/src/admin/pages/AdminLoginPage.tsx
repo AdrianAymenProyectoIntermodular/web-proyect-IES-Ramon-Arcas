@@ -1,9 +1,9 @@
 import { useState, type FormEvent } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router';
 import { ApiError } from '../../api/client';
-import { useAdminSession } from '../../context/AdminSessionContext';
+import { useAdminSession } from '../context/AdminSessionContext';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
-import styles from './admin.module.css';
+import styles from '../admin.module.css';
 
 function loginErrorMessage(error: unknown): string {
   if (error instanceof ApiError) {

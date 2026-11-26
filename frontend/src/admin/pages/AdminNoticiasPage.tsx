@@ -6,15 +6,15 @@ import {
   patchAdminNoticia,
   type AdminNoticia,
   type NoticiaInput,
-} from '../../api/admin';
+} from '../api/admin';
 import { ApiError } from '../../api/client';
 import { AsyncState } from '../../components/ui/AsyncState';
-import { useAdminSession } from '../../context/AdminSessionContext';
+import { useAdminSession } from '../context/AdminSessionContext';
 import { useApi } from '../../hooks/useApi';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 import { formatLongDate, toDbDateTime } from '../../lib/dates';
 import { slugify } from '../../lib/slug';
-import styles from './admin.module.css';
+import styles from '../admin.module.css';
 
 interface FormState {
   id: number | null;

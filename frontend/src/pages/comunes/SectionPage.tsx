@@ -1,7 +1,7 @@
 import { Link, useOutletContext } from 'react-router';
-import { PageHeader } from '../components/ui/PageHeader';
-import { Reveal } from '../components/ui/Reveal';
-import type { LayoutContext } from '../lib/navigation';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { Reveal } from '../../components/ui/Reveal';
+import type { LayoutContext } from '../../lib/navigation';
 import { NotFoundPage } from './NotFoundPage';
 import styles from './SectionPage.module.css';
 

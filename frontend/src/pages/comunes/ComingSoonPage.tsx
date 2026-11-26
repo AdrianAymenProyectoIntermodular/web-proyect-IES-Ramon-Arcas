@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import { PageHeader } from '../components/ui/PageHeader';
+import { PageHeader } from '../../components/ui/PageHeader';
 
 /** Marcador para secciones del menú pendientes (ver docs/proyecto-intermodular.md, reparto E3/E4). */
 export function ComingSoonPage({ title }: { title: string }) {

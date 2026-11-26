@@ -1,12 +1,12 @@
-import { getPagina } from '../api/endpoints';
-import { DocumentosPanel } from '../components/content/DocumentosPanel';
-import { AsyncState } from '../components/ui/AsyncState';
-import { Markdown } from '../components/ui/Markdown';
-import { PageHeader } from '../components/ui/PageHeader';
-import { Reveal } from '../components/ui/Reveal';
-import { useApi } from '../hooks/useApi';
-import { blockMarkdown } from '../lib/blocks';
-import { pick } from '../lib/i18n';
+import { getPagina } from '../../api/endpoints';
+import { DocumentosPanel } from '../../components/content/DocumentosPanel';
+import { AsyncState } from '../../components/ui/AsyncState';
+import { Markdown } from '../../components/ui/Markdown';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { Reveal } from '../../components/ui/Reveal';
+import { useApi } from '../../hooks/useApi';
+import { blockMarkdown } from '../../lib/blocks';
+import { pick } from '../../lib/i18n';
 import { NotFoundPage } from './NotFoundPage';
 
 interface PaginaPageProps {

@@ -1,10 +1,10 @@
-import { getEnsenanzas, getMateriasOptativas, getOfertasOptativas } from '../api/endpoints';
-import { AsyncState, EmptyState } from '../components/ui/AsyncState';
-import { PageHeader } from '../components/ui/PageHeader';
-import { Reveal } from '../components/ui/Reveal';
-import { useApi } from '../hooks/useApi';
-import { pick } from '../lib/i18n';
-import styles from './catalog.module.css';
+import { getEnsenanzas, getMateriasOptativas, getOfertasOptativas } from '../../api/endpoints';
+import { AsyncState, EmptyState } from '../../components/ui/AsyncState';
+import { PageHeader } from '../../components/ui/PageHeader';
+import { Reveal } from '../../components/ui/Reveal';
+import { useApi } from '../../hooks/useApi';
+import { pick } from '../../lib/i18n';
+import styles from '../../styles/catalog.module.css';
 
 /** Materias optativas y su oferta por enseñanza, nivel y curso académico. */
 export function OptativasPage() {

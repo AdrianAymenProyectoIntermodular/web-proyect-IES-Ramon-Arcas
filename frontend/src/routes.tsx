@@ -1,12 +1,9 @@
 import type { RouteObject } from 'react-router';
-import { AdminRoot } from './pages/admin/AdminRoot';
+import { AdminRoot } from './admin/AdminRoot';
+import { AdminDocumentosPage, AdminLayout, AdminLoginPage, AdminNoticiasPage } from './admin/lazyPages';
 import { SiteLayout } from './components/layout/SiteLayout';
-import { HomePage } from './pages/HomePage';
+import { HomePage } from './pages/inicio/HomePage';
 import {
-  AdminDocumentosPage,
-  AdminLayout,
-  AdminLoginPage,
-  AdminNoticiasPage,
   ContactoPage,
   DepartamentoPage,
   DepartamentosPage,
@@ -23,7 +20,7 @@ import {
   ProgramasPage,
   SectionPage,
 } from './pages/lazyPages';
-import { NotFoundPage } from './pages/NotFoundPage';
+import { NotFoundPage } from './pages/comunes/NotFoundPage';
 
 // Portada y 404 van en el bundle inicial; el resto se descarga al navegar.
 
