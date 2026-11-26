@@ -2,18 +2,20 @@
 .env
 .env.local
 
-# Dependencias y caches
-api/vendor/
-web/node_modules/
-admin/node_modules/
-web/dist/
-admin/dist/
+# Backend (PHP)
+backend/vendor/
+backend/coverage/
+backend/.phpunit.cache/
+backend/.phpunit.result.cache
+backend/storage/uploads/*
+!backend/storage/uploads/.gitkeep
+backend/storage/logs/*
+!backend/storage/logs/.gitkeep
 
-# Uploads y logs locales
-api/storage/uploads/*
-!api/storage/uploads/.gitkeep
-api/storage/logs/*
-!api/storage/logs/.gitkeep
+# Frontend (React)
+frontend/node_modules/
+frontend/dist/
+frontend/coverage/
 
 # IDE / SO
 .idea/
@@ -21,9 +23,3 @@ api/storage/logs/*
 *.swp
 Thumbs.db
 .DS_Store
-
-# Cobertura / PHPUnit / Vitest
-api/coverage/
-web/coverage/
-api/.phpunit.cache/
-api/.phpunit.result.cache

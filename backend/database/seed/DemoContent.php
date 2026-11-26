@@ -727,7 +727,7 @@ final class DemoContent
     }
 
     /**
-     * Archivos de ejemplo versionados en api/database/seed-files. El seed los
+     * Archivos de ejemplo versionados en backend/database/seed-files. El seed los
      * copia a storage/uploads para que las descargas funcionen en local.
      *
      * @return array<string,array{fichero:string,nombre_original:string,mime:string,descripcion_es:string}>

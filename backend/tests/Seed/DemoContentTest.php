@@ -287,11 +287,11 @@ final class DemoContentTest extends TestCase
         }
     }
 
-    /** El front usa el mismo fixture para su menú de respaldo (web/src/lib/navigation.test.ts). */
+    /** El front usa el mismo fixture para su menú de respaldo (frontend/src/lib/navigation.test.ts). */
     public function testMenuMatchesSharedFixture(): void
     {
         $fixture = json_decode(
-            (string) file_get_contents(__DIR__ . '/../fixtures/menu-principal.json'),
+            (string) file_get_contents(__DIR__ . '/../../../shared/fixtures/menu-principal.json'),
             true,
             512,
             JSON_THROW_ON_ERROR

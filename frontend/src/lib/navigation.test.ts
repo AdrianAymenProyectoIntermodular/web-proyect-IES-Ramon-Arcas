@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import seedMenu from '../../../api/tests/fixtures/menu-principal.json';
+import seedMenu from '../../../shared/fixtures/menu-principal.json';
 import type { ApiMenuItem } from '../api/types';
 import { FALLBACK_NAVIGATION, fromApiMenu, isActiveSection, isSafeInternalPath, type NavItem } from './navigation';
 

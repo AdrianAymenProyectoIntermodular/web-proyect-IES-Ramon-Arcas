@@ -5,19 +5,21 @@ services:
     ports:
       - "8088:80"
     volumes:
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./api/public:/var/www/api/public:ro
-      - ./api/storage:/var/www/api/storage:ro
-      - ./web/dist:/var/www/web:ro
+      - ./infra/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./backend/public:/var/www/api/public:ro
+      - ./backend/storage:/var/www/api/storage:ro
+      - ./frontend/dist:/var/www/web:ro
     depends_on:
       - php
       - mariadb
 
   php:
     build:
-      context: ./docker/php
+      context: ./backend
     volumes:
-      - ./api:/var/www/api
+      - ./backend:/var/www/api
+      # Fixture del menú que comparten PHPUnit y Vitest
+      - ./shared:/var/www/shared:ro
     env_file:
       - .env
     depends_on:

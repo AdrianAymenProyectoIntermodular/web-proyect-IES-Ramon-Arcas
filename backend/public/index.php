@@ -16,7 +16,7 @@ use App\Support\Logger;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-// Carga .env simple (sin dependencia externa) desde la raiz del monorepo o api/
+// Carga .env simple (sin dependencia externa) desde la raiz del repositorio o backend/
 $envCandidates = [
     dirname(__DIR__, 2) . '/.env',
     dirname(__DIR__) . '/.env',
