@@ -25,7 +25,7 @@ Detalle y reparto en [proyecto-intermodular.md](proyecto-intermodular.md).
 
 Cada entrega se cierra con todos los tests en verde y un tag `EntregaN` sobre `main`.
 
-## Fuera de v1 (no van en `openapi.yaml` paths)
+## Fuera de v1 (no van en `backend/openapi.yaml` paths)
 
 - Preinscripciones / admisión tramitada
 - Reservas de cita previa estructuradas

@@ -13,8 +13,9 @@ Sitio **público** del centro (familias, alumnado, comunidad). API REST JSON baj
 - PHP 8.3 sin framework (Composer + PSR-4 + PHPUnit)
 - MariaDB 11.4 LTS
 - Docker: Nginx (same-origin) + PHP-FPM + MariaDB
-- OpenAPI: `openapi.yaml` (solo operaciones implementadas)
-- Frontend en `web/`: React 19 + TypeScript strict + Vite + React Router, `motion` para animaciones, Vitest + Testing Library. Nginx sirve `web/dist` en `/`
+- Estructura: `backend/` (PHP, `openapi.yaml`, Dockerfile), `frontend/` (React; panel admin en `src/admin/`), `shared/` (fixtures comunes), `infra/` (Nginx). Ningún archivo de una parte dentro de la otra; lo común va en `shared/` o `infra/`
+- OpenAPI: `backend/openapi.yaml` (solo operaciones implementadas)
+- Frontend en `frontend/`: React 19 + TypeScript strict + Vite + React Router, `motion` para animaciones, Vitest + Testing Library. Nginx sirve `frontend/dist` en `/`
 
 ## Contexto del proyecto intermodular
 
@@ -22,8 +23,8 @@ Memoria (Proyecto 2), entregas E1–E4, reparto con el compañero, fuentes de la
 
 - El centro está en **Lorca** (Murcia), no en Totana.
 - Personas, eventos y fichas de departamentos son **ficticios**; solo la historia del centro es real.
-- Identidad: blanco + `#ff6900`; texto sobre naranja en `#1a1a1a` y enlaces naranjas en `#b34700` (contraste WCAG AA). Logos en `web/public/brand/`.
-- Tokens en `web/src/styles/tokens.css`; reutilizar los componentes de `web/src/components/` antes de crear otros.
+- Identidad: blanco + `#ff6900`; texto sobre naranja en `#1a1a1a` y enlaces naranjas en `#b34700` (contraste WCAG AA). Logos en `frontend/public/brand/`.
+- Tokens en `frontend/src/styles/tokens.css`; reutilizar los componentes de `frontend/src/components/` antes de crear otros.
 
 ## Arranque rápido
 
@@ -45,7 +46,7 @@ Documentos: [docs/arquitectura.md](docs/arquitectura.md), [docs/modelo-datos.md]
 1. Autorización siempre en servidor (`App\Auth\Rbac`).
 2. `ORDER BY` solo con whitelist (`App\Support\Sort`).
 3. Errores: `{ "error": { "code", "message", "fields?" } }`.
-4. Actualizar `openapi.yaml` junto al código de cada endpoint.
+4. Actualizar `backend/openapi.yaml` junto al código de cada endpoint.
 5. No compartir BD/sesión con la intranet.
 6. No añadir rutas “reserved” al OpenAPI; roadmap en `docs/fases.md`.
 7. Comentarios: decisiones e invariantes, no narrar lo obvio.
@@ -58,15 +59,15 @@ Documentos: [docs/arquitectura.md](docs/arquitectura.md), [docs/modelo-datos.md]
 
 | Parte | Dónde | Ejecutar |
 |---|---|---|
-| API PHP | `api/tests/` (PHPUnit) | `docker compose exec php vendor/bin/phpunit` (o `cd api; vendor/bin/phpunit`) |
-| Frontend | `web/src/**/*.test.ts(x)` (Vitest + Testing Library) | `cd web; npm test` |
+| API PHP | `backend/tests/` (PHPUnit) | `docker compose exec php vendor/bin/phpunit` (o `cd backend; vendor/bin/phpunit`) |
+| Frontend | `frontend/src/**/*.test.ts(x)` (Vitest + Testing Library) | `cd frontend; npm test` |
 | Calidad front | — | `npm run lint`, `npm run typecheck`, `npm run build` |
 
 Qué cubrir en cada implementación:
 - Casos normales, límites y errores (404, 422, 429, fallo de red), no solo el camino feliz.
 - API: permisos 401/403 y visibilidad pública (borradores y fuera de vigencia dan 404).
-- Front: comportamiento visible para el usuario (roles y nombres accesibles, teclado, estados de carga/vacío/error). Simular la API con `mockApi()` y renderizar rutas con `renderRoute()` (`web/src/test/utils.tsx`); nunca llamar a la API real.
-- Si se cambia el menú del seed, regenerar `api/tests/fixtures/menu-principal.json` con `php api/bin/menu-fixture.php`: lo comparan PHPUnit y Vitest.
+- Front: comportamiento visible para el usuario (roles y nombres accesibles, teclado, estados de carga/vacío/error). Simular la API con `mockApi()` y renderizar rutas con `renderRoute()` (`frontend/src/test/utils.tsx`); nunca llamar a la API real.
+- Si se cambia el menú del seed, regenerar `shared/fixtures/menu-principal.json` con `php backend/bin/menu-fixture.php`: lo comparan PHPUnit y Vitest.
 
 ## Flujo Git
 

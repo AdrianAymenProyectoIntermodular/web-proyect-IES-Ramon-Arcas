@@ -6,12 +6,12 @@ Extracto de la memoria técnica del Proyecto Intermodular DAW (curso 2026/2027) 
 
 | Apartado | Requisito | Dónde se cumple |
 |---|---|---|
-| §6.2 Mapa del sitio | Inicio, Organización, Familias, Enseñanzas, Programas, Secretaría, Noticias, Contacto | Menú `principal` del seed (`App\Seed\DemoContent::menuPrincipal()`) y `web/src/lib/navigation.ts` |
+| §6.2 Mapa del sitio | Inicio, Organización, Familias, Enseñanzas, Programas, Secretaría, Noticias, Contacto | Menú `principal` del seed (`App\Seed\DemoContent::menuPrincipal()`) y `frontend/src/lib/navigation.ts` |
 | §6.3 Modelo | Menú separado del contenido, documentos reutilizables, personas + órganos + pertenencias | [modelo-datos.md](modelo-datos.md) |
-| §6.4 Stack | Backend PHP sin framework + MariaDB, frontend TypeScript, backoffice de contenidos | `api/` (PHP 8.3), `web/` (React + Vite + TS), panel admin pendiente (E4) |
+| §6.4 Stack | Backend PHP sin framework + MariaDB, frontend TypeScript, backoffice de contenidos | `backend/` (PHP 8.3), `frontend/` (React + Vite + TS), panel admin pendiente (E4) |
 | §7 Independencia | Sin BD ni sesión compartidas con la intranet; solo un enlace | Clave pública `intranet_url` en `configuracion` (botón «Acceso intranet») |
 | §3.2 Datos | Sin datos personales reales, credenciales ni claves en el repo; licencia libre recomendada (MIT); commits con sentido | Personas ficticias, correos `@iesramonarcas.example`, secretos solo en `.env` |
-| §8.2 Entrega | README con instrucciones y capturas, repositorio público, memoria de módulo | README raíz y `web/README.md`; capturas pendientes (E4) |
+| §8.2 Entrega | README con instrucciones y capturas, repositorio público, memoria de módulo | README raíz y `frontend/README.md`; capturas pendientes (E4) |
 
 Las fases 1–4 de la memoria (§5.14) son de la **intranet**. La web usa su propio calendario de entregas (abajo).
 
@@ -20,7 +20,7 @@ Las fases 1–4 de la memoria (§5.14) son de la **intranet**. La web usa su pro
 | Entrega | Contenido | Estado |
 |---|---|---|
 | **E1** | Docker, migraciones, API REST `/api/v1`, OpenAPI, auth admin + CSRF + RBAC | Hecha (tag `Entrega1`) |
-| **E2** | Frontend `web/`: identidad visual, menú con desplegables + hamburguesa, Inicio con agenda de eventos, Departamentos (rejilla + ficha), Historia real, Quiénes somos, órganos, Contacto (`POST /contacto`), seed de demostración, Nginx sirviendo el SPA, tests PHPUnit + Vitest | En curso (rama `Adrian-scaffold-frontend`) |
+| **E2** | Frontend `frontend/`: identidad visual, menú con desplegables + hamburguesa, Inicio con agenda de eventos, Departamentos (rejilla + ficha), Historia real, Quiénes somos, órganos, Contacto (`POST /contacto`), seed de demostración, Nginx sirviendo el SPA, tests PHPUnit + Vitest | En curso (rama `Adrian-scaffold-frontend`) |
 | **E3** | Enseñanzas (ESO, Bachillerato, FP, optativas), Programas por categoría, Familias, documentos institucionales, horarios y calendario | Pendiente |
 | **E4** | Noticias (listado + detalle), Secretaría, panel admin (login CSRF + CRUD), `sitemap.xml`, revisión WCAG, capturas en README | Pendiente |
 
@@ -28,11 +28,11 @@ Las fases 1–4 de la memoria (§5.14) son de la **intranet**. La web usa su pro
 
 - **Stack:** React 19 + TypeScript (strict) + Vite + React Router; animaciones con `motion` respetando `prefers-reduced-motion`; Markdown con `react-markdown` sin HTML crudo.
 - **Identidad:** blanco + naranja corporativo `#ff6900`, estilo Material (elevaciones, radios, foco visible). El texto sobre naranja es oscuro (`#1a1a1a`, 5.7:1) y los enlaces naranjas usan `#b34700` (5.5:1): blanco sobre `#ff6900` no cumple WCAG AA (2.9:1).
-- **Logos** (`web/public/brand/`): `logo-horizontal.png` en cabecera de escritorio, `logo-icon.png` en móvil y favicon, `logo-stacked.png` en el pie.
+- **Logos** (`frontend/public/brand/`): `logo-horizontal.png` en cabecera de escritorio, `logo-icon.png` en móvil y favicon, `logo-stacked.png` en el pie.
 - **Sin Google Fonts** (RGPD): pila de fuentes del sistema.
 - **Animaciones** inspiradas en [um.es](https://www.um.es/): títulos con tipografía cinética por palabras, aparición al hacer scroll, sol del logo que gira con el scroll, tarjetas que se rellenan de naranja.
-- **Datos:** todo sale de la API pública. Si `GET /menus/principal` falla, el menú usa `FALLBACK_NAVIGATION`, que un fixture compartido (`api/tests/fixtures/menu-principal.json`) mantiene idéntico al seed en PHPUnit y Vitest.
-- **Rutas pendientes:** cada sección del menú aún sin implementar está en `PENDING_SECTIONS` (`web/src/routes.tsx`) y muestra «en preparación», así ningún enlace del menú da 404.
+- **Datos:** todo sale de la API pública. Si `GET /menus/principal` falla, el menú usa `FALLBACK_NAVIGATION`, que un fixture compartido (`shared/fixtures/menu-principal.json`) mantiene idéntico al seed en PHPUnit y Vitest.
+- **Rutas pendientes:** cada sección del menú aún sin implementar está en `PENDING_SECTIONS` (`frontend/src/routes.tsx`) y muestra «en preparación», así ningún enlace del menú da 404.
 
 ## Ubicación: Lorca
 
@@ -71,8 +71,8 @@ Cada integrante trabaja en ramas `<Nombre>-<implementacion>` y solo integra en `
 | Accesibilidad WCAG, SEO (`sitemap.xml`), pulido de animaciones | — | Adrián |
 
 Contrato común:
-- Reutilizar tokens (`web/src/styles/tokens.css`) y componentes (`PageHeader`, `AsyncState`, `Reveal`, `PersonList`…); no crear estilos de marca paralelos.
-- Al implementar una sección: quitarla de `PENDING_SECTIONS` y añadir su ruta en `web/src/routes.tsx` (página diferida en `web/src/pages/lazyPages.ts`).
-- Si un endpoint cambia, actualizar `openapi.yaml` en el mismo commit.
+- Reutilizar tokens (`frontend/src/styles/tokens.css`) y componentes (`PageHeader`, `AsyncState`, `Reveal`, `PersonList`…); no crear estilos de marca paralelos.
+- Al implementar una sección: quitarla de `PENDING_SECTIONS` y añadir su ruta en `frontend/src/routes.tsx` (página diferida en `frontend/src/pages/lazyPages.ts`).
+- Si un endpoint cambia, actualizar `backend/openapi.yaml` en el mismo commit.
 - No tocar `App\Auth` ni RBAC sin acordarlo.
 - **Tests obligatorios** con cada implementación (ver [AGENTS.md](../AGENTS.md)).

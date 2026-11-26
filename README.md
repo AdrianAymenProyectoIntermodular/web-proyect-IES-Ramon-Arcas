@@ -3,7 +3,7 @@
 Web informativa del centro (Lorca, Murcia): API REST en PHP + frontend React/TypeScript. Independiente de la intranet: otra base de datos, otra sesión y otro login. El único enlace entre ambos es la URL configurable `intranet_url`.
 
 - **1ª entrega (tag `Entrega1`):** contrato OpenAPI + API REST operativa + documentación de diseño.
-- **2ª entrega:** frontend público en `web/` (identidad visual, menú responsive, Inicio con agenda, departamentos, historia, órganos de gobierno y contacto) + seed de demostración + tests.
+- **2ª entrega:** frontend público en `frontend/` (identidad visual, menú responsive, Inicio con agenda, departamentos, historia, órganos de gobierno y contacto) + seed de demostración + tests.
 - **3ª/4ª entrega (E3–E4):** secciones públicas restantes (Noticias, Enseñanzas, Programas, Familias, Secretaría, documentos) y panel admin mínimo. Detalle en [docs/memoria-modulos.md](docs/memoria-modulos.md).
 - Roadmap y reparto: [docs/fases.md](docs/fases.md) y [docs/proyecto-intermodular.md](docs/proyecto-intermodular.md).
 
@@ -17,7 +17,7 @@ Repositorio público: [adrirosel/web-proyect-IES-Ramon-Arcas](https://github.com
 - **PHP sin framework + Composer**: control del ciclo request→respuesta (router, auth, repositorios) sin acoplar a un MVC pesado; Composer aporta autoload y PHPUnit.
 - **MariaDB 11.4 LTS**: rama con mantenimiento predecible y compatibilidad MySQL habitual en hosting.
 - **Nginx same-origin** (`/` frontend, `/api`, uploads; futuro `/admin`): cookies de sesión y CSRF sin pelear con CORS multi-origen. Puerto host: **8088**.
-- **React + TypeScript + Vite** en `web/`: tipado estricto contra el contrato de la API, páginas cargadas bajo demanda y tests con Vitest + Testing Library.
+- **React + TypeScript + Vite** en `frontend/`: tipado estricto contra el contrato de la API, páginas cargadas bajo demanda y tests con Vitest + Testing Library.
 - **Menú separado del contenido**, **archivos únicos** y **documentos reutilizables**: evita duplicar subidas y permite nuevas secciones sin endpoints ad hoc.
 - **Personas + órganos + pertenencias**: una persona puede ser docente y miembro del consejo con cargos distintos, sin duplicar fichas.
 - **Materias optativas + ofertas**: la materia (“Robótica”) no se clona cada curso; la oferta fija enseñanza, nivel y curso académico.
@@ -57,13 +57,13 @@ Nginx publica la API en `http://localhost:8088/api/v1`.
 ### Frontend
 
 ```bash
-cd web
+cd frontend
 npm install
 npm run dev      # http://localhost:5173 (proxy de /api a http://localhost:8088)
-npm run build    # genera web/dist, que Nginx sirve en http://localhost:8088/
+npm run build    # genera frontend/dist, que Nginx sirve en http://localhost:8088/
 ```
 
-Detalles en [web/README.md](web/README.md). Si la API está en otro puerto: `VITE_API_PROXY=http://localhost:9000 npm run dev`.
+Detalles en [frontend/README.md](frontend/README.md). Si la API está en otro puerto: `VITE_API_PROXY=http://localhost:9000 npm run dev`.
 
 Comprobar la API:
 
@@ -116,28 +116,35 @@ curl -b cookies.txt -c cookies.txt -s -X POST http://localhost:8088/api/v1/admin
 ## Estructura
 
 ```
-api/           Backend PHP (public/, src/, routes/, database/, tests/)
-web/           Frontend React + TypeScript + Vite (src/, public/brand/)
+backend/       API PHP: public/, src/, routes/, bin/, database/ (migraciones, seed, PDFs demo),
+               tests/, storage/, openapi.yaml (contrato), Dockerfile, composer.json
+frontend/      Web React + TypeScript + Vite: src/ (sitio público y src/admin/), public/brand/
+shared/        Lo que comparten ambas partes: fixtures/menu-principal.json (PHPUnit + Vitest)
+infra/         Infraestructura común: nginx/default.conf (sirve /, /api y /storage)
 docs/          Arquitectura, seguridad, modelo, permisos, fases, proyecto intermodular
-openapi.yaml   Contrato de la API
-docker/        Nginx + imagen PHP
+docker-compose.yml, .env.example   Orquestación local (Nginx + PHP-FPM + MariaDB)
 ```
+
+Regla: cada archivo vive en la parte a la que pertenece. Lo que usan las dos partes va en `shared/` o `infra/`, nunca dentro de la otra.
+
+Si vienes de la estructura antigua (`api/`, `web/`, `docker/`): [docs/guia-reorganizacion.md](docs/guia-reorganizacion.md).
 
 ## Documentación
 
 | Documento | Contenido |
 |---|---|
 | [AGENTS.md](AGENTS.md) | Normas para agentes / convenciones |
-| [openapi.yaml](openapi.yaml) | Endpoints, esquemas, errores |
+| [backend/openapi.yaml](backend/openapi.yaml) | Endpoints, esquemas, errores |
 | [docs/arquitectura.md](docs/arquitectura.md) | Capas y decisiones |
 | [docs/seguridad.md](docs/seguridad.md) | Controles y checklist |
 | [docs/modelo-datos.md](docs/modelo-datos.md) | Tablas, relaciones y mapa memoria↔API |
 | [docs/permisos.md](docs/permisos.md) | Matriz RBAC |
 | [docs/fases.md](docs/fases.md) | Hitos y roadmap (fuera de OpenAPI) |
 | [docs/proyecto-intermodular.md](docs/proyecto-intermodular.md) | Memoria (Proyecto 2), entregas, reparto, fuentes de la historia |
+| [docs/guia-reorganizacion.md](docs/guia-reorganizacion.md) | Cómo actualizar tu copia local tras la reorganización en `backend/` y `frontend/` |
 | [docs/memoria-modulos.md](docs/memoria-modulos.md) | Módulos implementados en E3–E4, endpoints, seed, tests y demo |
-| [api/README.md](api/README.md) | Cómo añadir un endpoint |
-| [web/README.md](web/README.md) | Frontend: estructura, scripts y cómo añadir una sección |
+| [backend/README.md](backend/README.md) | Cómo añadir un endpoint |
+| [frontend/README.md](frontend/README.md) | Frontend: estructura, scripts y cómo añadir una sección |
 
 ## Tests
 
@@ -148,7 +155,7 @@ Cada implementación nueva debe llevar sus tests y ejecutarlos antes de hacer co
 docker compose exec php vendor/bin/phpunit
 
 # Frontend (Vitest + Testing Library), lint, tipos y build
-cd web
+cd frontend
 npm test
 npm run lint
 npm run typecheck
@@ -167,4 +174,4 @@ Repositorio: [adrirosel/web-proyect-IES-Ramon-Arcas](https://github.com/adrirose
 
 - Comprobar versión PHP/MariaDB del hosting y documentar desviaciones respecto a Docker.
 - `SESSION_SECURE=true` detrás de HTTPS; rotar `ADMIN_PASSWORD`; no usar el seed de desarrollo.
-- Backups de MariaDB + volumen de `api/storage/uploads`.
+- Backups de MariaDB + volumen de `backend/storage/uploads`.

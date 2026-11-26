@@ -2,7 +2,7 @@
 
 ## Capas de la API
 
-1. **Front controller** (`api/public/index.php`): carga `.env`, CORS, cabeceras, despacha el router.
+1. **Front controller** (`backend/public/index.php`): carga `.env`, CORS, cabeceras, despacha el router.
 2. **Router** (`App\Http\Router`): método + patrón `{param}` + middleware en onion.
 3. **Controllers**: validan entrada, aplican reglas de visibilidad/permisos y delegan en PDO.
 4. **Support**: paginación, sort con whitelist, scope de publicados, rate limit, logger.

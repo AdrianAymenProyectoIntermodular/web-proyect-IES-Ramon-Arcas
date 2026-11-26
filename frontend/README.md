@@ -20,21 +20,27 @@ Sin la API arrancada la web sigue funcionando: el menú usa su copia local y cad
 
 ```
 src/
-  api/          Cliente HTTP (errores del contrato → ApiError), endpoints y tipos
+  admin/        Panel de administración (/admin), separado del sitio público:
+                api/ (cliente admin), context/ (sesión + CSRF), pages/, layout,
+                lazyPages.ts y sus tests
+  api/          Cliente HTTP público (errores del contrato → ApiError), endpoints y tipos
   components/   layout (cabecera, pie), ui (PageHeader, AsyncState, Reveal, Markdown),
                 departments, events, people, contact, brand
   context/      Configuración pública del centro (GET /configuracion)
   hooks/        useApi (carga con cancelación), useNavigation, useDocumentTitle
   lib/          Lógica pura: fechas, i18n, navegación, validación del contacto
-  pages/        Una página por ruta; las diferidas se declaran en pages/lazyPages.ts
-  styles/       tokens.css (colores, elevaciones, tipografía, movimiento) y global.css
+  pages/        Páginas públicas agrupadas por sección del menú: inicio, organizacion,
+                ensenanzas, programas, noticias, contacto y comunes (páginas genéricas,
+                404). Las diferidas se declaran en pages/lazyPages.ts
+  styles/       tokens.css (colores, elevaciones, tipografía, movimiento), global.css
+                y catalog.module.css (listados compartidos)
   test/         setup de Vitest y utilidades (mockApi, renderRoute)
   routes.tsx    Rutas y secciones pendientes (PENDING_SECTIONS)
 ```
 
 ## Añadir una sección
 
-1. Crea la página en `src/pages/` reutilizando `PageHeader`, `AsyncState` y los tokens de `styles/tokens.css`.
+1. Crea la página en la carpeta de su sección (`src/pages/<seccion>/`) reutilizando `PageHeader`, `AsyncState` y los tokens de `styles/tokens.css`.
 2. Si llama a la API, añade el endpoint tipado en `src/api/endpoints.ts` y sus tipos en `src/api/types.ts`.
 3. Declárala en `src/pages/lazyPages.ts`, quita su entrada de `PENDING_SECTIONS` y añade la ruta en `src/routes.tsx`.
 4. Escribe sus tests junto al código (`*.test.tsx`) y ejecuta `npm test`, `npm run lint`, `npm run typecheck` y `npm run build` antes del commit.
@@ -43,6 +49,7 @@ src/
 
 - Simula la API con `mockApi({ '/api/v1/recurso': { body: {...} } })`; las rutas no declaradas responden 404 con el formato de error de la API.
 - Renderiza páginas completas con `renderRoute('/ruta')` (router en memoria + configuración).
+- El menú de respaldo se compara con `../shared/fixtures/menu-principal.json`, el mismo fixture que usa PHPUnit.
 - Busca elementos por rol y nombre accesible (`getByRole('link', { name: '…' })`): así el test también comprueba la accesibilidad.
 - Cubre carga, vacío, error, 404 y teclado además del caso normal.
 

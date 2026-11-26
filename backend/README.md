@@ -6,7 +6,7 @@
 2. Implementar método en el controller (validación + SQL preparado).
 3. Si es listado: `Pagination` + `Sort` con whitelist de columnas.
 4. Si es público: filtrar con `PublishedScope` o equivalente.
-5. Actualizar `../openapi.yaml`.
+5. Actualizar `openapi.yaml`.
 6. Añadir test de permiso o visibilidad en `tests/`.
 
 ## Scripts

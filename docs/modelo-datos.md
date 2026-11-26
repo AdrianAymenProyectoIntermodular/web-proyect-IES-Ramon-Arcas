@@ -1,6 +1,6 @@
 # Modelo de datos
 
-Migración fuente de verdad: `api/database/migrations/001_init_schema.sql`.
+Migración fuente de verdad: `backend/database/migrations/001_init_schema.sql`.
 
 ## Entidades clave
 

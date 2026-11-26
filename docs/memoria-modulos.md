@@ -29,25 +29,25 @@ Rutas fuera del layout público (`/admin`):
 - `/admin/noticias`: listar, crear (slug generado del título), editar, publicar/despublicar y archivar.
 - `/admin/documentos`: listar, subir PDF (`POST /admin/archivos`), crear documento por categoría, editar y archivar.
 
-La sesión se guarda en cookie httpOnly; el token CSRF vive en memoria (`AdminSessionContext`). Los componentes usan `apiPatch`, `apiPut`, `apiDelete` y `apiUpload` añadidos a `web/src/api/client.ts`.
+La sesión se guarda en cookie httpOnly; el token CSRF vive en memoria (`AdminSessionContext`). Los componentes usan `apiPatch`, `apiPut`, `apiDelete` y `apiUpload` añadidos a `frontend/src/api/client.ts`.
 
 ## 3. Contenido de demostración (seed)
 
-`api/src/Seed/DemoContent.php` incorpora:
+`backend/database/seed/DemoContent.php` incorpora:
 
 - 12 noticias con fechas relativas para que el listado pagine.
 - ESO, Bachillerato y 4 ciclos de FP con módulos profesionales.
 - 6 materias optativas y 10 ofertas por enseñanza/nivel/curso.
 - 10 programas (rango 8–12) repartidos entre `educativo`, `plan_centro`, `actividad` y `otro`, con departamentos vinculados.
 - 8 páginas editoriales, 6 documentos reutilizables y 8 enlaces externos.
-- 6 PDFs mínimos en `api/database/seed-files/` que el seed copia a `storage/uploads`.
+- 6 PDFs mínimos en `backend/database/seed-files/` que el seed copia a `storage/uploads`.
 
 El seed es idempotente (upsert por clave natural) y todo el contenido ficticio usa `@iesramonarcas.example`.
 
 ## 4. Tests
 
-- PHPUnit: `api/tests/Seed/DemoContentTest.php` ampliado (programas 8–12, slugs únicos, enums, límites de columnas, referencias cruzadas, PDFs válidos, menú intacto frente a `menu-principal.json`).
-- Vitest: `web/src/pages/modules.test.tsx` cubre carga, vacío, error, 404, paginación, enlaces y panel admin (login, redirección, CSRF 403).
+- PHPUnit: `backend/tests/Seed/DemoContentTest.php` ampliado (programas 8–12, slugs únicos, enums, límites de columnas, referencias cruzadas, PDFs válidos, menú intacto frente a `menu-principal.json`).
+- Vitest: `frontend/src/pages/modules.test.tsx` y `frontend/src/admin/admin.test.tsx` cubren carga, vacío, error, 404, paginación, enlaces y panel admin (login, redirección, CSRF 403).
 
 Verificación ejecutada: `npm test` (237 tests), `npm run lint`, `npm run typecheck`, `npm run build`, `vendor/bin/phpunit` (45 tests).
 
@@ -59,7 +59,7 @@ docker compose up -d --build
 docker compose exec php composer install
 docker compose exec php php bin/migrate.php
 docker compose exec php php bin/seed.php
-cd web; npm install; npm run dev
+cd frontend; npm install; npm run dev
 ```
 
 Abrir `http://localhost:5173`. Requiere Docker Desktop (WSL2).
